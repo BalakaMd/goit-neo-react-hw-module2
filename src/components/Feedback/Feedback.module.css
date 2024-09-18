@@ -1,0 +1,29 @@
+.feedbackContainer {
+    text-align: center;
+}
+
+.feedbackContainerGood {
+    font-size: 18px;
+    margin: 5px 0;
+    font-weight: bold;
+    color: #4caf50;
+}
+
+.feedbackContainerBad {
+    font-weight: bold;
+    color: #f44336;
+}
+
+.feedbackContainerNeutral {
+    font-weight: bold;
+    color: #2196f3;
+}
+
+.feedbackContainerTotal {
+    font-weight: bold;
+}
+
+.feedbackContainerPositive {
+    font-weight: bold;
+    color: #2d582f;
+}
