@@ -1,31 +1,25 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 
 import Description from './components/Description/Description.jsx';
 import Options from './components/Options/Options.jsx';
 import Feedback from './components/Feedback/Feedback.jsx';
+import Notification from './components/Notification/Notification.jsx';
 
 function App() {
-  const [feedbacks, setFeedbacks] = useState({ good: 0, neutral: 0, bad: 0 });
-  const isFirstRender = useRef(true);
+  const [feedbacks, setFeedbacks] = useState(() => {
+    const savedFeedbacks = JSON.parse(localStorage.getItem('feedbacks'));
+    return savedFeedbacks || { good: 0, neutral: 0, bad: 0 };
+  });
 
   useEffect(() => {
-    if (isFirstRender.current) {
-      const savedFeedbacks = JSON.parse(localStorage.getItem('feedbacks'));
-      if (savedFeedbacks) {
-        setFeedbacks(savedFeedbacks);
-      }
-      isFirstRender.current = false;
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!isFirstRender.current) {
-      localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
-    }
+    localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
   }, [feedbacks]);
 
   const totalFeedback = feedbacks.good + feedbacks.neutral + feedbacks.bad;
+  const positivePercentage = totalFeedback
+    ? Math.round((feedbacks.good / totalFeedback) * 100)
+    : 0;
 
   const updateFeedback = feedbackType => {
     if (feedbackType === 'reset') {
@@ -43,9 +37,13 @@ function App() {
       <Description />
       <Options updateFeedback={updateFeedback} totalFeedback={totalFeedback} />
       {totalFeedback > 0 ? (
-        <Feedback {...feedbacks} total={totalFeedback} />
+        <Feedback
+          {...feedbacks}
+          total={totalFeedback}
+          positivePercentage={positivePercentage}
+        />
       ) : (
-        <p>No feedback yet</p>
+        <Notification />
       )}
     </div>
   );
